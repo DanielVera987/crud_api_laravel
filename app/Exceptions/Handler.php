@@ -57,8 +57,12 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'token absent'], 400);
         }
 
+        if($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException){
+            return response()->json(
+                ['error' => 'Not Found']
+            , 404);
+        }
+
         return parent::render($request, $exception);
     }
-
-    
 }
