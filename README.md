@@ -14,7 +14,7 @@ el usuario podra crear tareas, editarlas, eliminarlas y listar sus tareas
 | ------------- | ------------- | ------------- |
 | POST  | /v1/login  | Inicio de sesion |
 | POST  | /v1/refresh  | Refrescar token |
-| POST  | /v1/me | |
+| POST  | /v1/me | Muestra datos del usuario logeado |
 | POST  | /v1/register | Registrar nuevo usuario |
 
 ## Licencia 💳
