@@ -1,14 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\User;
+use Illuminate\Auth\Events\Failed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['login']]);
+        $this->middleware('jwt', ['except' => ['login', 'register']]);
     }
 
     /**
@@ -67,10 +70,61 @@ class AuthController extends Controller
     protected function respondWithToken($token)
     {
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user(),
+            'data' => [
+                'type' => 'login',
+                'user' => auth()->user(),
+            ],
+            'attributes' => [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60,
+            ]
         ]);
+    }
+
+    public function register(Request $request){
+
+        $validation = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6|confirmed'
+        ]);
+
+        if($validation->fails()){
+            return response()->json([
+                'error' => [
+                    'status' => '400',
+                    'code' => $validation->errors(),
+                    'detail' => 'Verifica que los campos se llamen correctamente y tengan valor valido'
+                ]
+            ], 400);
+        }
+
+        $data = $request->all();
+
+        $user = new User();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->password = Hash::make($data['password']);
+        $user->save();
+
+        if(is_numeric($user->id)){
+            return response()->json([
+                'data' => [
+                    'id' => $user->id,
+                    'type' => 'user',
+                    'attributes' => [
+                        'user' => $user
+                    ]
+                ]
+            ], 200);
+        }
+
+        return response()->json([
+            'error' => [
+                'status' => '400',
+                'code' => 'No se pudo crear el usuario'
+            ]
+        ], 400);
     }
 }

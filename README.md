@@ -7,9 +7,9 @@ el usuario podra crear tareas, editarlas, eliminarlas y listar sus tareas
 
 ## Ejemplo 🖼️
 
-## Rutas
+## Rutas 🧾
 
-## Licencia
+## Licencia 💳
 
 ## Expresiones de Gratitud 🎁
 
