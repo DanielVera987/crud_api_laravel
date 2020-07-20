@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 use App\User;
-use Illuminate\Auth\Events\Failed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -108,7 +107,7 @@ class AuthController extends Controller
         $user->password = Hash::make($data['password']);
         $user->save();
 
-        if(is_numeric($user->id)){
+        if(is_numeric($user->id) && $user){
             return response()->json([
                 'data' => [
                     'id' => $user->id,

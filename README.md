@@ -9,6 +9,12 @@ el usuario podra crear tareas, editarlas, eliminarlas y listar sus tareas
 
 ## Rutas 🧾
 
+### User
+* POST | /v1/login
+* POST | /v1/refresh 
+* POST | /v1/me
+* POST | v1/register
+
 ## Licencia 💳
 
 ## Expresiones de Gratitud 🎁
