@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
@@ -10,6 +11,6 @@ class Post extends Model
 
     public function user()
     {
-        $this->belongsTo('users');
+        $this->belongsTo(User::class);
     }
 }
