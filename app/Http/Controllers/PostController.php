@@ -37,6 +37,13 @@ class PostController extends Controller
                 ], 200);
             }
         }
+
+        return response()->json([
+            'error' => [
+                'status' => '400',
+                'code' => 'No se pudo obtener los posts'
+            ]
+        ], 400);
     }
 
     /**
