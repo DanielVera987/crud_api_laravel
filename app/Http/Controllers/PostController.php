@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -54,7 +55,48 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = Validator::make($request->all(), [
+            'titulo' => 'required|string|max:255',
+            'contenido' =>  'required|string|max:255'
+        ]);
+
+        if($validate->fails()){
+            return response()->json([
+                'error' => [
+                    'status' => 400,
+                    'code' => $validate->errors(),
+                    'details' => 'Error al procesar los datos'
+                ]
+            ], 400);
+        }
+
+        $data = $request->all();
+
+        $post = new Post();
+        $post->user_id = Auth::user()->id;
+        $post->titulo = $data['titulo'];
+        $post->contenido = $data['contenido'];
+        $post->save();
+
+        if(is_numeric($post->id))
+        {
+            return response()->json([
+                'data' => [
+                    'type' => 'post',
+                    'id' => $post->id,
+                    'attribute' => [
+                        'post' => $post
+                    ]
+                ]
+            ], 200);
+        }
+
+        return response()->json([
+            'error' => [
+                'status' => 500,
+                'details' => 'Error al procesar los datos'
+            ]
+        ], 500);
     }
 
     /**
