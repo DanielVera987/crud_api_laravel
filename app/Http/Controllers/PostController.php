@@ -119,7 +119,44 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $validate =  Validator::make($request->all(),[
+            'titulo' => 'required|string|max:255',
+            'contenido' => 'required|string|max:255'
+        ]);
+
+        if($validate->fails())
+        {
+            return response()->json([
+                'error' => [
+                    'status' => '400',
+                    'details' => 'Error al procesar los datos'
+                ]
+            ], 400);
+        }
+
+        $data = $request->all();
+        
+        $post->titulo = $data['titulo'];
+        $post->contenido = $data['contenido'];
+        $update = $post->save();
+
+        if($update)
+        {
+            return response()->json([
+                'data' => [
+                    'type' => 'post',
+                    'id' => $post->id,
+                    'attribute' => $post
+                ]
+            ], 200);
+        }
+
+        return response()->json([
+            'error' => [
+                'status' => '400',
+                'details' => 'Error al procesar los datos'
+            ]
+        ], 400);
     }
 
     /**
@@ -130,6 +167,6 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        
+        return $post;
     }
 }
